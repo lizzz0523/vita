@@ -4,21 +4,21 @@ import Rectangle from '../geometry/Rectangle';
 
 let VERTEX_SHADER_SOURCE = `
     attribute vec4 a_VertexPosition;
-    attribute vec4 a_VertexNormal;
+    // attribute vec4 a_VertexNormal;
     attribute vec2 a_TextureCoord;
     uniform mat4 u_ProjectMatrix;
     uniform mat4 u_ModelViewMatrix;
     uniform mat4 u_NormalMatrix;
     varying vec3 v_VertexPosition;
-    varying vec3 v_VertexNormal;
+    // varying vec3 v_VertexNormal;
     varying highp vec2 v_TextureCoord;
 
     void main() {
         vec4 vertexPosition =  u_ModelViewMatrix * a_VertexPosition;
-        vec4 vertexNormal = u_NormalMatrix * a_VertexNormal;
+        // vec4 vertexNormal = u_NormalMatrix * a_VertexNormal;
         
         v_VertexPosition = vertexPosition.xyz;
-        v_VertexNormal = vertexNormal.xyz;
+        // v_VertexNormal = vertexNormal.xyz;
         v_TextureCoord = a_TextureCoord;
 
         gl_Position = u_ProjectMatrix * vertexPosition;
@@ -28,7 +28,7 @@ let VERTEX_SHADER_SOURCE = `
 let FRAGMENT_SHADER_SOURCE = `
     precision mediump float;
     varying vec3 v_VertexPosition;
-    varying vec3 v_VertexNormal;
+    // varying vec3 v_VertexNormal;
     varying highp vec2 v_TextureCoord;
     uniform vec3 u_LightAmbientColor;
     uniform sampler2D u_Sampler;

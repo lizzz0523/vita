@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Basic</title>
+    <title>Cube</title>
     <style>
         html, body {
             width: 100%;
@@ -39,20 +39,38 @@
 
         var stage = new vitajs.Stage(canvas);
 
-        stage.orthogonal(-20, 20, -20, 20, -1000, 1000);
+        stage.orthogonal(-5, 5, -5, 5, -1000, 1000);
 
-        var rect = new vitajs.Shape();
-        rect.graphics.setStyle({ color: 0xff0000 });
-        rect.graphics.drawRect(10, 10);
-        rect.y = 12;
+        var container = new vitajs.Container();
 
-        stage.addChild(rect);
+        container.z = -10;
+        container.y = -2;
+        container.rotateX = 30 * Math.PI / 180;
+        container.rotateY = 45 * Math.PI / 180;
 
-        let circle = new vitajs.Shape();
-        circle.graphics.setStyle({ color: 0x00ff00 });
-        circle.graphics.drawCircle(10);
+        var cube1 = new vitajs.Shape();
+        cube1.graphics.setStyle({ color: 0xff0000 });
+        cube1.graphics.drawCube(1, 1, 1);
 
-        stage.addChild(circle);
+        container.addChild(cube1);
+
+        var cube2 = new vitajs.Shape();
+        cube2.graphics.setStyle({ color: 0x00ff00 });
+        cube2.graphics.drawCube(1, 1, 1);
+        cube2.x = -1;
+        cube2.y = -1;
+
+        container.addChild(cube2);
+
+        var cube3 = new vitajs.Shape();
+        cube3.graphics.setStyle({ color: 0x0000ff });
+        cube3.graphics.drawCube(1, 1, 1);
+        cube3.z = 1;
+        cube3.y = -1;
+
+        container.addChild(cube3);
+
+        stage.addChild(container);
 
         stage.update();
     </script>

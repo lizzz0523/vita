@@ -4,19 +4,19 @@ import Graphics from './Graphics';
 
 let VERTEX_SHADER_SOURCE = `
     attribute vec4 a_VertexPosition;
-    attribute vec4 a_VertexNormal;
+    // attribute vec4 a_VertexNormal;
     uniform mat4 u_ProjectMatrix;
     uniform mat4 u_ModelViewMatrix;
     uniform mat4 u_NormalMatrix;
     varying vec3 v_VertexPosition;
-    varying vec3 v_VertexNormal;
+    // varying vec3 v_VertexNormal;
 
     void main() {
         vec4 vertexPosition =  u_ModelViewMatrix * a_VertexPosition;
-        vec4 vertexNormal = u_NormalMatrix * a_VertexNormal;
+        // vec4 vertexNormal = u_NormalMatrix * a_VertexNormal;
         
         v_VertexPosition = vertexPosition.xyz;
-        v_VertexNormal = vertexNormal.xyz;
+        // v_VertexNormal = vertexNormal.xyz;
 
         gl_Position = u_ProjectMatrix * vertexPosition;
     }
@@ -25,7 +25,7 @@ let VERTEX_SHADER_SOURCE = `
 let FRAGMENT_SHADER_SOURCE = `
     precision mediump float;
     varying vec3 v_VertexPosition;
-    varying vec3 v_VertexNormal;
+    // varying vec3 v_VertexNormal;
     uniform vec3 u_LightAmbientColor;
     uniform vec4 u_Color;
     uniform float u_Alpha;

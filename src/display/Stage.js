@@ -87,6 +87,10 @@ export default class Stage extends Container {
     updateProgram(target) {
         let gl = this.gl;
 
+        if (!target.program) {
+            return;
+        }
+
         gl.program = target.program;
         gl.program.bind();
         
@@ -113,6 +117,10 @@ export default class Stage extends Container {
 
         this._modelViewMatrix = modelViewMatrix;
         this._normalMatrix = normalMatrix;
+
+        if (!target.program) {
+            return;
+        }
 
         this._setModelViewMatrix();
     }

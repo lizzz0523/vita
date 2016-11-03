@@ -74,6 +74,14 @@
 
 	var _Rectangle2 = _interopRequireDefault(_Rectangle);
 
+	var _Ellipse = __webpack_require__(24);
+
+	var _Ellipse2 = _interopRequireDefault(_Ellipse);
+
+	var _Cube = __webpack_require__(25);
+
+	var _Cube2 = _interopRequireDefault(_Cube);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var vitajs = window.vitajs = {};
@@ -85,6 +93,8 @@
 	vitajs.Shape = _Shape2.default;
 	vitajs.Graphics = _Graphics2.default;
 	vitajs.Graphics.Rectangle = _Rectangle2.default;
+	vitajs.Graphics.Ellipse = _Ellipse2.default;
+	vitajs.Graphics.Cube = _Cube2.default;
 
 /***/ },
 /* 1 */
@@ -6985,6 +6995,10 @@
 	        value: function updateProgram(target) {
 	            var gl = this.gl;
 
+	            if (!target.program) {
+	                return;
+	            }
+
 	            gl.program = target.program;
 	            gl.program.bind();
 
@@ -7012,6 +7026,10 @@
 
 	            this._modelViewMatrix = modelViewMatrix;
 	            this._normalMatrix = normalMatrix;
+
+	            if (!target.program) {
+	                return;
+	            }
 
 	            this._setModelViewMatrix();
 	        }
@@ -7383,9 +7401,9 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var VERTEX_SHADER_SOURCE = '\n    attribute vec4 a_VertexPosition;\n    attribute vec4 a_VertexNormal;\n    attribute vec2 a_TextureCoord;\n    uniform mat4 u_ProjectMatrix;\n    uniform mat4 u_ModelViewMatrix;\n    uniform mat4 u_NormalMatrix;\n    varying vec3 v_VertexPosition;\n    varying vec3 v_VertexNormal;\n    varying highp vec2 v_TextureCoord;\n\n    void main() {\n        vec4 vertexPosition =  u_ModelViewMatrix * a_VertexPosition;\n        vec4 vertexNormal = u_NormalMatrix * a_VertexNormal;\n        \n        v_VertexPosition = vertexPosition.xyz;\n        v_VertexNormal = vertexNormal.xyz;\n        v_TextureCoord = a_TextureCoord;\n\n        gl_Position = u_ProjectMatrix * vertexPosition;\n    }\n';
+	var VERTEX_SHADER_SOURCE = '\n    attribute vec4 a_VertexPosition;\n    // attribute vec4 a_VertexNormal;\n    attribute vec2 a_TextureCoord;\n    uniform mat4 u_ProjectMatrix;\n    uniform mat4 u_ModelViewMatrix;\n    uniform mat4 u_NormalMatrix;\n    varying vec3 v_VertexPosition;\n    // varying vec3 v_VertexNormal;\n    varying highp vec2 v_TextureCoord;\n\n    void main() {\n        vec4 vertexPosition =  u_ModelViewMatrix * a_VertexPosition;\n        // vec4 vertexNormal = u_NormalMatrix * a_VertexNormal;\n        \n        v_VertexPosition = vertexPosition.xyz;\n        // v_VertexNormal = vertexNormal.xyz;\n        v_TextureCoord = a_TextureCoord;\n\n        gl_Position = u_ProjectMatrix * vertexPosition;\n    }\n';
 
-	var FRAGMENT_SHADER_SOURCE = '\n    precision mediump float;\n    varying vec3 v_VertexPosition;\n    varying vec3 v_VertexNormal;\n    varying highp vec2 v_TextureCoord;\n    uniform vec3 u_LightAmbientColor;\n    uniform sampler2D u_Sampler;\n    uniform float u_Alpha;\n\n    void main() {\n        gl_FragColor = vec4(u_LightAmbientColor, u_Alpha) * texture2D(u_Sampler, v_TextureCoord);\n    }\n';
+	var FRAGMENT_SHADER_SOURCE = '\n    precision mediump float;\n    varying vec3 v_VertexPosition;\n    // varying vec3 v_VertexNormal;\n    varying highp vec2 v_TextureCoord;\n    uniform vec3 u_LightAmbientColor;\n    uniform sampler2D u_Sampler;\n    uniform float u_Alpha;\n\n    void main() {\n        gl_FragColor = vec4(u_LightAmbientColor, u_Alpha) * texture2D(u_Sampler, v_TextureCoord);\n    }\n';
 
 	var Sprite = function (_DisplayObject) {
 	    _inherits(Sprite, _DisplayObject);
@@ -7480,44 +7498,41 @@
 	var Rectangle = function Rectangle(width, height) {
 	    _classCallCheck(this, Rectangle);
 
-	    var vertices = [];
+	    var vertices = [],
+	        normals = [],
+	        uvs = [];
 
 	    var w1 = width / 2,
-	        h1 = height / 2;
-
-	    vertices.push(-w1, h1, 0.0);
-	    vertices.push(w1, h1, 0.0);
-	    vertices.push(w1, -h1, 0.0);
-	    vertices.push(-w1, -h1, 0.0);
-
-	    this.vertices = vertices;
-
-	    var normals = [];
-
-	    var z1 = 1.0;
-
-	    normals.push(0.0, 0.0, z1);
-	    normals.push(0.0, 0.0, z1);
-	    normals.push(0.0, 0.0, z1);
-	    normals.push(0.0, 0.0, z1);
-
-	    this.normals = normals;
-
-	    var uvs = [];
-
-	    var s1 = 0.0,
+	        h1 = height / 2,
+	        z1 = 1.0,
+	        s1 = 0.0,
 	        t1 = 0.0,
 	        s2 = 1.0,
 	        t2 = 1.0;
 
+	    vertices.push(-w1, h1, 0.0);
+	    vertices.push(w1, h1, 0.0);
+	    vertices.push(-w1, -h1, 0.0);
+	    vertices.push(w1, -h1, 0.0);
+	    normals.push(0.0, 0.0, z1);
+	    normals.push(0.0, 0.0, z1);
+	    normals.push(0.0, 0.0, z1);
+	    normals.push(0.0, 0.0, z1);
 	    uvs.push(s1, t2);
 	    uvs.push(s2, t2);
-	    uvs.push(s2, t1);
 	    uvs.push(s1, t1);
+	    uvs.push(s2, t1);
 
+	    this.vertices = vertices;
+	    this.normals = normals;
 	    this.uvs = uvs;
 
-	    this.indices = [0, 1, 3, 1, 3, 2];
+	    var indices = [];
+
+	    indices.push(0, 1, 2);
+	    indices.push(1, 3, 2);
+
+	    this.indices = indices;
 	};
 
 	exports.default = Rectangle;
@@ -7552,9 +7567,9 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var VERTEX_SHADER_SOURCE = '\n    attribute vec4 a_VertexPosition;\n    attribute vec4 a_VertexNormal;\n    uniform mat4 u_ProjectMatrix;\n    uniform mat4 u_ModelViewMatrix;\n    uniform mat4 u_NormalMatrix;\n    varying vec3 v_VertexPosition;\n    varying vec3 v_VertexNormal;\n\n    void main() {\n        vec4 vertexPosition =  u_ModelViewMatrix * a_VertexPosition;\n        vec4 vertexNormal = u_NormalMatrix * a_VertexNormal;\n        \n        v_VertexPosition = vertexPosition.xyz;\n        v_VertexNormal = vertexNormal.xyz;\n\n        gl_Position = u_ProjectMatrix * vertexPosition;\n    }\n';
+	var VERTEX_SHADER_SOURCE = '\n    attribute vec4 a_VertexPosition;\n    // attribute vec4 a_VertexNormal;\n    uniform mat4 u_ProjectMatrix;\n    uniform mat4 u_ModelViewMatrix;\n    uniform mat4 u_NormalMatrix;\n    varying vec3 v_VertexPosition;\n    // varying vec3 v_VertexNormal;\n\n    void main() {\n        vec4 vertexPosition =  u_ModelViewMatrix * a_VertexPosition;\n        // vec4 vertexNormal = u_NormalMatrix * a_VertexNormal;\n        \n        v_VertexPosition = vertexPosition.xyz;\n        // v_VertexNormal = vertexNormal.xyz;\n\n        gl_Position = u_ProjectMatrix * vertexPosition;\n    }\n';
 
-	var FRAGMENT_SHADER_SOURCE = '\n    precision mediump float;\n    varying vec3 v_VertexPosition;\n    varying vec3 v_VertexNormal;\n    uniform vec3 u_LightAmbientColor;\n    uniform vec4 u_Color;\n    uniform float u_Alpha;\n\n    void main() {\n        gl_FragColor = vec4(u_LightAmbientColor, u_Alpha) * u_Color;\n    }\n';
+	var FRAGMENT_SHADER_SOURCE = '\n    precision mediump float;\n    varying vec3 v_VertexPosition;\n    // varying vec3 v_VertexNormal;\n    uniform vec3 u_LightAmbientColor;\n    uniform vec4 u_Color;\n    uniform float u_Alpha;\n\n    void main() {\n        gl_FragColor = vec4(u_LightAmbientColor, u_Alpha) * u_Color;\n    }\n';
 
 	var Shape = function (_DisplayObject) {
 	    _inherits(Shape, _DisplayObject);
@@ -7640,6 +7655,14 @@
 
 	var _Rectangle2 = _interopRequireDefault(_Rectangle);
 
+	var _Ellipse = __webpack_require__(24);
+
+	var _Ellipse2 = _interopRequireDefault(_Ellipse);
+
+	var _Cube = __webpack_require__(25);
+
+	var _Cube2 = _interopRequireDefault(_Cube);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7658,6 +7681,24 @@
 	        key: 'drawRect',
 	        value: function drawRect(width, height) {
 	            this.geometry = new _Rectangle2.default(width, height);
+	            this.size = this.geometry.indices.length;
+	        }
+	    }, {
+	        key: 'drawCircle',
+	        value: function drawCircle(radius) {
+	            this.geometry = new _Ellipse2.default(radius, radius);
+	            this.size = this.geometry.indices.length;
+	        }
+	    }, {
+	        key: 'drawEllipse',
+	        value: function drawEllipse(width, height) {
+	            this.geometry = new _Ellipse2.default(width, height);
+	            this.size = this.geometry.indices.length;
+	        }
+	    }, {
+	        key: 'drawCube',
+	        value: function drawCube(width, height, depth) {
+	            this.geometry = new _Cube2.default(width, height, depth);
 	            this.size = this.geometry.indices.length;
 	        }
 	    }]);
@@ -7683,6 +7724,115 @@
 
 	    return [r, g, b, 1.0];
 	};
+
+/***/ },
+/* 24 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Ellipse = function Ellipse(width, height) {
+	    _classCallCheck(this, Ellipse);
+
+	    var step = Math.floor(15 * Math.sqrt(width + height));
+
+	    var vertices = [],
+	        normals = [];
+
+	    var w1 = width / 2,
+	        h1 = height / 2,
+	        z1 = 1.0;
+
+	    vertices.push(0.0, 0.0, 0.0);
+	    normals.push(0.0, 0.0, z1);
+
+	    for (var i = 0; i < step; i++) {
+	        var angle = 2 * Math.PI * i / step,
+	            cos = Math.cos(angle),
+	            sin = Math.sin(angle);
+
+	        vertices.push(cos * w1, sin * h1, 0.0);
+	        normals.push(0.0, 0.0, z1);
+	    }
+
+	    this.vertices = vertices;
+	    this.normals = normals;
+
+	    var indices = [];
+
+	    for (var _i = 1; _i <= step; _i++) {
+	        if (_i === step) {
+	            indices.push(0, _i, 1);
+	        } else {
+	            indices.push(0, _i, _i + 1);
+	        }
+	    }
+
+	    this.indices = indices;
+	};
+
+	exports.default = Ellipse;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Cube = function Cube(width, height, depth) {
+	    _classCallCheck(this, Cube);
+
+	    var vertices = [],
+	        normals = [];
+
+	    var w1 = width / 2,
+	        h1 = height / 2,
+	        d1 = depth / 2;
+
+	    vertices.push(-w1, h1, d1);
+	    vertices.push(w1, h1, d1);
+	    vertices.push(-w1, -h1, d1);
+	    vertices.push(w1, -h1, d1);
+	    vertices.push(-w1, h1, -d1);
+	    vertices.push(w1, h1, -d1);
+	    vertices.push(-w1, -h1, -d1);
+	    vertices.push(w1, -h1, -d1);
+	    // normals.push()
+
+	    this.vertices = vertices;
+	    this.normals = normals;
+
+	    var indices = [];
+
+	    indices.push(0, 1, 2);
+	    indices.push(1, 3, 2);
+	    indices.push(5, 4, 7);
+	    indices.push(4, 6, 7);
+	    indices.push(4, 0, 6);
+	    indices.push(0, 2, 6);
+	    indices.push(1, 5, 3);
+	    indices.push(5, 7, 3);
+	    indices.push(4, 5, 0);
+	    indices.push(5, 1, 0);
+	    indices.push(2, 3, 6);
+	    indices.push(3, 7, 6);
+
+	    this.indices = indices;
+	};
+
+	exports.default = Cube;
 
 /***/ }
 /******/ ]);

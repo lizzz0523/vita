@@ -5,6 +5,8 @@ import Sprite from './display/Sprite';
 import Shape from './display/Shape';
 import Graphics from './display/Graphics';
 import Rectangle from './geometry/Rectangle';
+import Ellipse from './geometry/Ellipse';
+import Cube from './geometry/Cube';
 
 let vitajs = window.vitajs = {};
 
@@ -15,3 +17,5 @@ vitajs.Sprite = Sprite;
 vitajs.Shape = Shape;
 vitajs.Graphics = Graphics;
 vitajs.Graphics.Rectangle = Rectangle;
+vitajs.Graphics.Ellipse = Ellipse;
+vitajs.Graphics.Cube = Cube;
