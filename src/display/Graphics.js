@@ -1,7 +1,7 @@
 import { vec4 } from 'gl-matrix';
 import { hex2Array } from '../utils/color';
 import Rectangle from '../geometry/Rectangle';
-import RoundedRectangle from '../geometry/RoundedRectangle';
+import Rounded from '../geometry/Rounded';
 import Ellipse from '../geometry/Ellipse';
 import Cube from '../geometry/Cube';
 import Sphere from '../geometry/Sphere';
@@ -16,12 +16,12 @@ export default class Graphics {
         this.color = vec4.fromValues.apply(vec4, hex2Array(style.color || 0xffffff));
     }
 
-    drawRect(width, height) {
+    drawRectangle(width, height) {
         this.drawGeometry(new Rectangle(width, height));
     }
 
-    drawRoundedRect(width, height, radius) {
-        this.drawGeometry(new RoundedRectangle(width, height, radius));
+    drawRounded(width, height, radius) {
+        this.drawGeometry(new Rounded(width, height, radius));
     }
 
     drawCircle(radius) {

@@ -74,9 +74,9 @@
 
 	var _Rectangle2 = _interopRequireDefault(_Rectangle);
 
-	var _RoundedRectangle = __webpack_require__(24);
+	var _Rounded = __webpack_require__(30);
 
-	var _RoundedRectangle2 = _interopRequireDefault(_RoundedRectangle);
+	var _Rounded2 = _interopRequireDefault(_Rounded);
 
 	var _Ellipse = __webpack_require__(26);
 
@@ -105,7 +105,7 @@
 	vitajs.Shape = _Shape2.default;
 	vitajs.Graphics = _Graphics2.default;
 	vitajs.Graphics.Rectangle = _Rectangle2.default;
-	vitajs.Graphics.RoundedRectangle = _RoundedRectangle2.default;
+	vitajs.Graphics.Rounded = _Rounded2.default;
 	vitajs.Graphics.Ellipse = _Ellipse2.default;
 	vitajs.Graphics.Cube = _Cube2.default;
 	vitajs.Graphics.Sphere = _Sphere2.default;
@@ -7662,9 +7662,9 @@
 
 	var _Rectangle2 = _interopRequireDefault(_Rectangle);
 
-	var _RoundedRectangle = __webpack_require__(24);
+	var _Rounded = __webpack_require__(30);
 
-	var _RoundedRectangle2 = _interopRequireDefault(_RoundedRectangle);
+	var _Rounded2 = _interopRequireDefault(_Rounded);
 
 	var _Ellipse = __webpack_require__(26);
 
@@ -7697,14 +7697,14 @@
 	            this.color = _glMatrix.vec4.fromValues.apply(_glMatrix.vec4, (0, _color.hex2Array)(style.color || 0xffffff));
 	        }
 	    }, {
-	        key: 'drawRect',
-	        value: function drawRect(width, height) {
+	        key: 'drawRectangle',
+	        value: function drawRectangle(width, height) {
 	            this.drawGeometry(new _Rectangle2.default(width, height));
 	        }
 	    }, {
-	        key: 'drawRoundedRect',
-	        value: function drawRoundedRect(width, height, radius) {
-	            this.drawGeometry(new _RoundedRectangle2.default(width, height, radius));
+	        key: 'drawRounded',
+	        value: function drawRounded(width, height, radius) {
+	            this.drawGeometry(new _Rounded2.default(width, height, radius));
 	        }
 	    }, {
 	        key: 'drawCircle',
@@ -7762,84 +7762,7 @@
 	};
 
 /***/ },
-/* 24 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _earcut = __webpack_require__(25);
-
-	var _earcut2 = _interopRequireDefault(_earcut);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var RoundedRectangle = function RoundedRectangle(width, height, radius) {
-	    _classCallCheck(this, RoundedRectangle);
-
-	    var vertices = [],
-	        normals = [];
-
-	    var w = width / 2,
-	        h = height / 2,
-	        z = 1.0,
-	        r = radius;
-
-	    quadraticBezierCurve(vertices, radius, -w, h - r, -w, h, -w + r, h);
-	    quadraticBezierCurve(vertices, radius, w - r, h, w, h, w, h - r);
-	    quadraticBezierCurve(vertices, radius, w, -h + r, w, -h, w - r, -h);
-	    quadraticBezierCurve(vertices, radius, -w + r, -h, -w, -h, -w, -h + r);
-
-	    for (var i = 0; i < vertices.length; i++) {
-	        normals.push(0.0, 0.0, z);
-	    }
-
-	    this.vertices = vertices;
-	    this.normals = normals;
-
-	    var indices = (0, _earcut2.default)(vertices, null, 3);
-
-	    this.indices = indices;
-	};
-
-	exports.default = RoundedRectangle;
-
-
-	var getPoint = function getPoint(n1, n2, perc) {
-	    return n1 + (n2 - n1) * perc;
-	};
-
-	var quadraticBezierCurve = function quadraticBezierCurve(vertices, radius, fromX, fromY, ctrlX, ctrlY, destX, destY) {
-	    var step = Math.floor(15 * Math.sqrt(2 * radius));
-
-	    var xa = void 0,
-	        ya = void 0,
-	        xb = void 0,
-	        yb = void 0,
-	        x = void 0,
-	        y = void 0;
-
-	    for (var i = 0, j = 0; i <= step; i++) {
-	        j = i / step;
-
-	        xa = getPoint(fromX, ctrlX, j);
-	        ya = getPoint(fromY, ctrlY, j);
-	        xb = getPoint(ctrlX, destX, j);
-	        yb = getPoint(ctrlY, destY, j);
-
-	        x = getPoint(xa, xb, j);
-	        y = getPoint(ya, yb, j);
-
-	        vertices.push(x, y, 0.0);
-	    }
-	};
-
-/***/ },
+/* 24 */,
 /* 25 */
 /***/ function(module, exports) {
 
@@ -8633,6 +8556,84 @@
 	};
 
 	exports.default = Polygon;
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _earcut = __webpack_require__(25);
+
+	var _earcut2 = _interopRequireDefault(_earcut);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Rounded = function Rounded(width, height, radius) {
+	    _classCallCheck(this, Rounded);
+
+	    var vertices = [],
+	        normals = [];
+
+	    var w = width / 2,
+	        h = height / 2,
+	        z = 1.0,
+	        r = radius;
+
+	    quadraticBezierCurve(vertices, radius, -w, h - r, -w, h, -w + r, h);
+	    quadraticBezierCurve(vertices, radius, w - r, h, w, h, w, h - r);
+	    quadraticBezierCurve(vertices, radius, w, -h + r, w, -h, w - r, -h);
+	    quadraticBezierCurve(vertices, radius, -w + r, -h, -w, -h, -w, -h + r);
+
+	    for (var i = 0; i < vertices.length; i++) {
+	        normals.push(0.0, 0.0, z);
+	    }
+
+	    this.vertices = vertices;
+	    this.normals = normals;
+
+	    var indices = (0, _earcut2.default)(vertices, null, 3);
+
+	    this.indices = indices;
+	};
+
+	exports.default = Rounded;
+
+
+	var getPoint = function getPoint(n1, n2, perc) {
+	    return n1 + (n2 - n1) * perc;
+	};
+
+	var quadraticBezierCurve = function quadraticBezierCurve(vertices, radius, fromX, fromY, ctrlX, ctrlY, destX, destY) {
+	    var step = Math.floor(15 * Math.sqrt(2 * radius));
+
+	    var xa = void 0,
+	        ya = void 0,
+	        xb = void 0,
+	        yb = void 0,
+	        x = void 0,
+	        y = void 0;
+
+	    for (var i = 0, j = 0; i <= step; i++) {
+	        j = i / step;
+
+	        xa = getPoint(fromX, ctrlX, j);
+	        ya = getPoint(fromY, ctrlY, j);
+	        xb = getPoint(ctrlX, destX, j);
+	        yb = getPoint(ctrlY, destY, j);
+
+	        x = getPoint(xa, xb, j);
+	        y = getPoint(ya, yb, j);
+
+	        vertices.push(x, y, 0.0);
+	    }
+	};
 
 /***/ }
 /******/ ]);

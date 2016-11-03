@@ -48,22 +48,22 @@
         stage.orthogonal(-w2, w2, -h2, h2, -1000, 1000);
 
         var rect = new vitajs.Shape();
-        rect.graphics.setStyle({ color: 0xff0000 });
-        rect.graphics.drawRect(100, 100);
-        rect.y = 120;
+        rect.graphics.setStyle({ color: 0xafcfed });
+        rect.graphics.drawRectangle(100, 100);
+        rect.x = -120;
 
         stage.addChild(rect);
 
         var circle = new vitajs.Shape();
-        circle.graphics.setStyle({ color: 0x00ff00 });
+        circle.graphics.setStyle({ color: 0x6884a1 });
         circle.graphics.drawCircle(100);
-        circle.y = -120;
+        circle.x = 120;
 
         stage.addChild(circle);
 
         var rounded = new vitajs.Shape();
-        rounded.graphics.setStyle({ color: 0x0000ff });
-        rounded.graphics.drawRoundedRect(100, 100, 10);
+        rounded.graphics.setStyle({ color: 0xd5eafe });
+        rounded.graphics.drawRounded(100, 100, 10);
 
         stage.addChild(rounded);
 

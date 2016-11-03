@@ -1,6 +1,6 @@
 import earcut from 'earcut';
 
-export default class RoundedRectangle {
+export default class Rounded {
     constructor(width, height, radius) {
         let vertices = [],
             normals = [];
