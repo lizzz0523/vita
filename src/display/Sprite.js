@@ -45,7 +45,14 @@ export default class Sprite extends DisplayObject {
 
         this.geometry = new Rectangle(frame.width, frame.height);
         this.alpha = 1.0;
+
         this.image = image;
+        this.uvs = [
+            0.0, 1.0,
+            1.0, 1.0,
+            0.0, 0.0,
+            1.0, 0.0
+        ];
     }
 
     init(root) {
@@ -65,7 +72,7 @@ export default class Sprite extends DisplayObject {
 
         indicesBuffer.write(new Uint16Array(this.geometry.indices), gl.STATIC_DRAW);
         verticesBuffer.write(new Float32Array(this.geometry.vertices), gl.STATIC_DRAW);
-        uvsBuffer.write(new Float32Array(this.geometry.uvs), gl.STATIC_DRAW);
+        uvsBuffer.write(new Float32Array(this.uvs), gl.STATIC_DRAW);
 
         this.indicesBuffer = indicesBuffer;
         this.verticesBuffer = verticesBuffer;

@@ -5,20 +5,20 @@ export default class Ellipse {
         let vertices = [],
             normals = [];
 
-        let w1 = width / 2,
-            h1 = height / 2,
-            z1 = 1.0;
+        let w = width / 2,
+            h = height / 2,
+            z = 1.0;
 
         vertices.push(0.0, 0.0, 0.0);
-        normals.push(0.0, 0.0, z1);
+        normals.push(0.0, 0.0, z);
 
         for (let i = 0; i < step; i++) {
             let angle = 2 * Math.PI * i / step,
                 cos = Math.cos(angle),
                 sin = Math.sin(angle);
 
-            vertices.push(cos * w1, sin * h1, 0.0);
-            normals.push(0.0, 0.0, z1);
+            vertices.push(cos * w, sin * h, 0.0);
+            normals.push(0.0, 0.0, z);
         }
 
         this.vertices = vertices;

@@ -50,25 +50,35 @@
 
         var cube1 = new vitajs.Shape();
         cube1.graphics.setStyle({ color: 0xff0000 });
-        cube1.graphics.drawCube(1, 1, 1);
+        cube1.graphics.drawCube(1, 0.5, 1);
 
         container.addChild(cube1);
 
         var cube2 = new vitajs.Shape();
         cube2.graphics.setStyle({ color: 0x00ff00 });
-        cube2.graphics.drawCube(1, 1, 1);
+        cube2.graphics.drawCube(1, 0.5, 1);
         cube2.x = -1;
-        cube2.y = -1;
+        cube2.y = -0.5;
 
         container.addChild(cube2);
 
         var cube3 = new vitajs.Shape();
         cube3.graphics.setStyle({ color: 0x0000ff });
-        cube3.graphics.drawCube(1, 1, 1);
+        cube3.graphics.drawCube(1, 0.5, 1);
         cube3.z = 1;
+        cube3.x = -1;
         cube3.y = -1;
 
         container.addChild(cube3);
+
+        var cube4 = new vitajs.Shape();
+        cube4.graphics.setStyle({ color: 0x00ffff });
+        cube4.graphics.drawCube(1, 0.5, 1);
+        cube4.z = 2;
+        cube4.x = -1;
+        cube4.y = -1.5;
+
+        container.addChild(cube4);
 
         stage.addChild(container);
 

@@ -23,6 +23,7 @@
     "webpack": "^1.13.2"
   },
   "dependencies": {
+    "earcut": "^2.1.1",
     "gl-matrix": "^2.3.2"
   }
 }

@@ -1,8 +1,11 @@
 import { vec4 } from 'gl-matrix';
 import { hex2Array } from '../utils/color';
 import Rectangle from '../geometry/Rectangle';
+import RoundedRectangle from '../geometry/RoundedRectangle';
 import Ellipse from '../geometry/Ellipse';
 import Cube from '../geometry/Cube';
+import Sphere from '../geometry/Sphere';
+import Polygon from '../geometry/Polygon';
 
 export default class Graphics {
     constructor() {
@@ -14,22 +17,35 @@ export default class Graphics {
     }
 
     drawRect(width, height) {
-        this.geometry = new Rectangle(width, height);
-        this.size = this.geometry.indices.length;
+        this.drawGeometry(new Rectangle(width, height));
+    }
+
+    drawRoundedRect(width, height, radius) {
+        this.drawGeometry(new RoundedRectangle(width, height, radius));
     }
 
     drawCircle(radius) {
-        this.geometry = new Ellipse(radius, radius);
-        this.size = this.geometry.indices.length;
+        this.drawGeometry(new Ellipse(radius, radius));
     }
 
     drawEllipse(width, height) {
-        this.geometry = new Ellipse(width, height);
-        this.size = this.geometry.indices.length;
+        this.drawGeometry(new Ellipse(width, height));
     }
 
     drawCube(width, height, depth) {
-        this.geometry = new Cube(width ,height, depth);
-        this.size = this.geometry.indices.length;
+        this.drawGeometry(new Cube(width ,height, depth));
+    }
+
+    drawSphere(radius) {
+        this.drawGeometry(new Sphere(radius));
+    }
+
+    drawPolygon(points) {
+        this.drawGeometry(new Polygon(points));
+    }
+
+    drawGeometry(geometry) {
+        this.geometry = geometry;
+        this.size = geometry.indices.length;
     }
 }

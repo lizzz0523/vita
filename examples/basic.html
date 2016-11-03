@@ -38,21 +38,34 @@
         canvas.style.height = window.innerWidth + 'px';
 
         var stage = new vitajs.Stage(canvas);
+            
+        var w = 500,
+            h = w / canvas.width * canvas.height;
 
-        stage.orthogonal(-20, 20, -20, 20, -1000, 1000);
+        var w2 = w / 2,
+            h2 = h / 2;
+
+        stage.orthogonal(-w2, w2, -h2, h2, -1000, 1000);
 
         var rect = new vitajs.Shape();
         rect.graphics.setStyle({ color: 0xff0000 });
-        rect.graphics.drawRect(10, 10);
-        rect.y = 12;
+        rect.graphics.drawRect(100, 100);
+        rect.y = 120;
 
         stage.addChild(rect);
 
         let circle = new vitajs.Shape();
         circle.graphics.setStyle({ color: 0x00ff00 });
-        circle.graphics.drawCircle(10);
+        circle.graphics.drawCircle(100);
+        circle.y = -120;
 
         stage.addChild(circle);
+
+        let rounded = new vitajs.Shape();
+        rounded.graphics.setStyle({ color: 0x0000ff });
+        rounded.graphics.drawRoundedRect(100, 100, 10);
+
+        stage.addChild(rounded);
 
         stage.update();
     </script>
