@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+        html {
+            overflow: visible;
+        }
+        body {
+            overflow: hidden;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        window.onerror = function (errorMessage, scriptURI, lineNumber, columnNumber, error) {
+            alert(errorMessage);
+            alert(lineNumber);
+        }
+    </script>
+    <script src="../vitajs.js"></script>
+    <script>
+        var canvas = document.getElementById('canvas');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        var stage = new vitajs.Stage(canvas);
+
+        var shape = new vitajs.Shape();
+        shape.graphics.setStyle({ color: 0xff0000 });
+        shape.graphics.drawRect(1, 1);
+
+        stage.addChild(shape);
+        stage.update();
+    </script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+        html {
+            overflow: visible;
+        }
+        body {
+            overflow: hidden;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        window.onerror = function (errorMessage, scriptURI, lineNumber, columnNumber, error) {
+            alert(errorMessage);
+            alert(lineNumber);
+        }
+    </script>
+    <script>
+        var canvas = document.getElementById('canvas');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+            
+        var glAttribs = { alpha: false, antialias: false },
+            gl;
+
+        gl = canvas.getContext('webgl', glAttribs) || canvas.getContext('experimental-webgl', glAttribs);
+
+        if (!gl) {
+            throw Error('not support webgl');
+        }
+
+        gl.clearColor(0.1, 0.2, 0.3, 1.0);
+        gl.enable(gl.DEPTH_TEST);
+        // gl.enable(gl.CULL_FACE);
+
+        var VS = [
+            'attribute vec4 a_Position;',
+            'void main() {',
+                'gl_Position = a_Position;',
+            '}'
+        ].join('');
+
+        var FS = [
+            'precision mediump float;',
+            'void main() {',
+                'gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);',
+            '}'
+        ].join('');
+
+        var vertices = [
+            0.0, 1.0,
+            1.0, 1.0,
+            0.0, 0.0,
+            1.0, 0.0,
+        ];
+
+        var indices = [
+            0, 1, 2,
+            1, 3, 2
+        ];
+
+        function Program(gl) {
+            this.gl = gl;
+            this.program = gl.createProgram();
+            this.first_ = true;
+        }
+
+        Program.prototype = {
+            extractAttribs_: function () {
+                var gl = this.gl,
+                    program = this.program,
+
+                    len = gl.getProgramParameter(program, gl.ACTIVE_ATTRIBUTES),
+                    i = 0,
+
+                    attribs = {},
+                    attrib,
+                    name;
+
+                for (; i < len; i++) {
+                    attrib = gl.getActiveAttrib(program, i);
+                    name = attrib.name;
+                    
+                    attribs[name] = gl.getAttribLocation(program, name);
+                }
+
+                this.attribs = attribs;
+            },
+
+            extractUniforms_: function () {
+                var gl = this.gl,
+                    program = this.program,
+
+                    len = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS),
+                    i = 0,
+
+                    uniforms = {},
+                    uniform,
+                    name;
+
+                for (; i < len; i++) {
+                    uniform = gl.getActiveUniform(program, i);
+                    name = uniform.name.replace('[0]', '');
+
+                    uniforms[name] = gl.getUniformLocation(program, name);
+                }
+
+                this.uniforms = uniforms;
+            },
+
+            attach: function (source, type) {
+                var gl = this.gl,
+                    program = this.program,
+                    shader,
+                    status,
+                    error;
+
+                switch (type) {
+                    case gl.VERTEX_SHADER:
+                        this.vertexShader_ = shader = gl.createShader(type);
+                        break;
+                    case gl.FRAGMENT_SHADER:
+                        this.fragmentShader_ = shader = gl.createShader(type);
+                        break;
+                }
+
+                gl.attachShader(program, shader);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+
+                status = gl.getShaderParameter(shader, gl.COMPILE_STATUS),
+                error = gl.getShaderInfoLog(shader);
+
+                if (!status) {
+                    gl.deleteShader(shader);
+
+                    throw Error(error);
+                }
+            },
+
+            link: function () {
+                var gl = this.gl,
+                    program = this.program,
+                    status,
+                    error;
+
+                gl.linkProgram(program);
+
+                status = gl.getProgramParameter(program, gl.LINK_STATUS);
+                error = gl.getProgramInfoLog(program);
+
+                if (!status) {
+                    gl.deleteProgram(program);
+
+                    throw Error(error);
+                }
+            },
+
+            bind: function () {
+                var gl = this.gl,
+                    program = this.program,
+
+                    first = this.first_,
+                    vertexShader = this.vertexShader_,
+                    fragmentShader = this.fragmentShader_;
+
+                if (first) {
+                    this.extractAttribs_();
+                    this.extractUniforms_();
+
+                    gl.deleteShader(vertexShader);
+                    gl.deleteShader(fragmentShader);
+
+                    this.first_ = false;
+                    this.vertexShader_ = null;
+                    this.fragmentShader_ = null;
+                }
+
+                gl.useProgram(program);
+            }
+        };
+
+        function Buffer(gl, type) {
+            this.gl = gl;
+            this.type = type;
+            this.buffer = gl.createBuffer();
+        }
+
+        Buffer.prototype = {
+            write: function (data, drawType) {
+                var gl = this.gl,
+                    type = this.type,
+                    buffer = this.buffer;
+
+                gl.bindBuffer(type, buffer);
+                gl.bufferData(type, data, drawType);
+                gl.bindBuffer(type, null);
+            },
+
+            bind: function (location, size, dataType) {
+                var gl = this.gl,
+                    type = this.type,
+                    buffer = this.buffer;
+
+                switch (type) {
+                    case gl.ARRAY_BUFFER:
+                        gl.bindBuffer(type, buffer);
+                        gl.vertexAttribPointer(location, size, dataType, false, 0, 0);
+                        gl.enableVertexAttribArray(location);
+                        break;
+                    case gl.ELEMENT_ARRAY_BUFFER:
+                        gl.bindBuffer(type, buffer);
+                        break;
+                }
+            }
+        };
+
+        var program = new Program(gl);
+
+        program.attach(VS, gl.VERTEX_SHADER);
+        program.attach(FS, gl.FRAGMENT_SHADER);
+        program.link();
+        program.bind();
+
+        var vertexBuffer = new Buffer(gl, gl.ARRAY_BUFFER);
+
+        vertexBuffer.write(new Float32Array(vertices), gl.STATIC_DRAW);
+        vertexBuffer.bind(program.attribs.a_Position, 2, gl.FLOAT);
+
+        var indexBuffer = new Buffer(gl, gl.ELEMENT_ARRAY_BUFFER);
+
+        indexBuffer.write(new Uint16Array(indices), gl.STATIC_DRAW);
+        indexBuffer.bind();
+
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+    </script>
+</body>
+</html>
