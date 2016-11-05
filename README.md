@@ -1,6 +1,10 @@
 ### VitaJS
 #### a webgl engine using with createjs suite
 
+#### Demo
+__2048 game__
+![image](https://raw.githubusercontent.com/lizzz0523/vita/master/examples/assets/qrcode.png)
+
 #### Usage
 ```javascript
     var { Stage, Shape } = vitajs;
