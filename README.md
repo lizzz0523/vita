@@ -2,7 +2,8 @@
 #### a webgl engine using with createjs suite
 
 #### Demo
-__2048 game__
+__2048 game__ scan it
+
 ![image](https://raw.githubusercontent.com/lizzz0523/vita/master/examples/assets/qrcode.png)
 
 #### Usage
