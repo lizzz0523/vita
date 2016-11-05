@@ -1,6 +1,6 @@
 export default class Ellipse {
     constructor(width, height) {
-        let step = Math.floor(15 * Math.sqrt(width + height));
+        let step = Math.floor(4 * Math.sqrt(width + height));
 
         let vertices = [],
             normals = [];

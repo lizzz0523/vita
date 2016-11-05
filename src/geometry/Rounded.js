@@ -33,7 +33,7 @@ const getPoint = (n1, n2, perc) => {
 }
 
 const quadraticBezierCurve = (vertices, radius, fromX, fromY, ctrlX, ctrlY, destX, destY) => {
-    let step = Math.floor(15 * Math.sqrt(2 * radius));
+    let step = Math.floor(4 * Math.sqrt(2 * radius));
 
     let xa, ya, xb, yb, x, y;
 

@@ -8427,7 +8427,7 @@
 	var Ellipse = function Ellipse(width, height) {
 	    _classCallCheck(this, Ellipse);
 
-	    var step = Math.floor(15 * Math.sqrt(width + height));
+	    var step = Math.floor(4 * Math.sqrt(width + height));
 
 	    var vertices = [],
 	        normals = [];
@@ -8611,7 +8611,7 @@
 	};
 
 	var quadraticBezierCurve = function quadraticBezierCurve(vertices, radius, fromX, fromY, ctrlX, ctrlY, destX, destY) {
-	    var step = Math.floor(15 * Math.sqrt(2 * radius));
+	    var step = Math.floor(4 * Math.sqrt(2 * radius));
 
 	    var xa = void 0,
 	        ya = void 0,
